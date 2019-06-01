@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.js">
+  </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.css">
+    <link rel="stylesheet" href="/stylesheets/main.css">
+
+  <body>
+    <br>
+    <div class="ui container">
+
+  <div class="ui secondary  menu">
+
+      <a class=" item" href="/searchResult">
+        Home
+      </a>
+      
+
+
+    </div>
+
+
+      <div class="ui right floated list ">
+
+
+        <!-- <a class=" item" href="/register">Sign Up as user</a>
+        <a class=" item" href="/login">Login as user</a><hr>
+        <a class=" item" href="/logout">Logout</a> -->
+        <%  if (!currentUser) {  %>
+          <a  href="/login">Login</a><hr>
+          <a  href="/register">Sign up</a><hr>
+        <% } else if(currentUser.role=="user"){ %>
+        <hr>  <a href="#">Signed in as <%= currentUser.username%></a>
+        <hr>  <a class=" item" href="/logout">Logout</a>
+        <% }else if (currentUser.role=="admin") { %>
+          <div class="ui top right attached label">Admin</div>
+        <hr>  <a href="#">Signed in as <%= currentUser.username%></a><br>
+          <a class=" item" href="/register">Sign Up a user</a>
+          <a class=" item" href="/login">Login as user</a>
+        <hr>  <a class=" item" href="/logout">Logout</a>
+        <% } %>
+
+      </div>

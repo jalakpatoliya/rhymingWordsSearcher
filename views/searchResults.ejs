@@ -1,0 +1,183 @@
+<% include ./partials/header %>
+<div class="ui container">
+        <form class="ui form" action="/searchResult" method="get">
+            <div class="five fields">
+                <div class="field">
+                    Word:<input class="ui input" id="myInput" oninput="myFunction()" type="text" placeholder="Type a word" name="word">
+                </div>
+                <div class="field">
+                    MinScore:<input class="ui input" id="min"  oninput="myFunction()" type="text" placeholder="Type minimum score" name="min" value="6000">
+                </div>
+                <div class="field">
+                    MaxScore:<input class="ui input" id="max" oninput="myFunction()" type="text" placeholder="Type maximum score" name="max" value="10000">
+                </div>
+
+
+                <!-- <div class="field">
+                        <button class="ui button" type="submit">Search</button>
+                </div> -->
+            </div>
+        </form>
+        <br>
+        <div id="demo">
+            <% if ((availData!=undefined)&&(availData.total_count=1)) { %>
+            <div class="ui three column grid">
+                <div class="column project-padding">
+                    <div class="ui raised red padded segment">
+                        <div class="project-head">
+                            <div>
+                                <p class="project-title">RhymingWord :
+                                    <%=availData[0].word%> 
+                                </p>
+                                <p class="project-title">Score : 
+                                    <%=availData[0].score%>
+                                </p>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+      
+        </div>
+                
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+            <script>
+                function myFunction() {
+                    let globData = [];
+                    var word = document.getElementById("myInput").value;
+                    let min  = document.getElementById("min").value;
+                    let max  = document.getElementById("max").value;
+
+                    console.log('word:::::: ');
+                        axios.get(`https://api.datamuse.com/words?rel_rhy=${word}`,{
+                            method: "GET", 
+                            // headers: { "user-agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36' }
+                        })
+                        .then(rawData => {
+                            console.log('rawData.data::::',rawData.data);
+                            console.log(`min:${min}, max:${max}`);
+                            
+                            rawData.data.forEach(object => {
+                                if ((object.score >= min) && (object.score <= max) ) {
+                                    globData.push(object);
+                                    console.log('65 getting executed::::',object.word);
+                                    
+                                }
+                            });
+                            
+
+                            console.log("globData:",globData); 
+                            document.getElementById("demo").innerHTML='';
+
+                            let newHTML;
+                            if (globData!=undefined) {
+                                if (globData.length>10) {
+                                    for (let i = 0; i < globData.length; i++) {
+                                        if (newHTML!=undefined) {
+                                            newHTML+=
+`
+ <div class="ui three column grid">
+        <div class="column project-padding">
+            <div class="ui raised red padded segment">
+                <div class="project-head">
+                    <div>
+                        <p class="project-title">RhymingWord:
+                            ${globData[i].word}
+                        </p>
+                        <p class="project-title">Score:
+                            ${globData[i].score}
+                        </p>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+`
+                                        }else{
+
+                                            newHTML = 
+    `
+     <div class="ui three column grid">
+            <div class="column project-padding">
+                <div class="ui raised red padded segment">
+                    <div class="project-head">
+                        <div>
+                            <p class="project-title">RhymingWord:
+                                ${globData[i].word}
+                            </p>
+                             <p class="project-title">Score:
+                            ${globData[i].score}
+                        </p>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    `
+                                        } //else working
+                                    } // for data >10
+                                } // if data >10
+                                else {
+                                    for (let i = 0; i < globData.length; i++) {
+                                        if (newHTML!=undefined) {
+                                            newHTML+=
+`
+ <div class="ui three column grid">
+        <div class="column project-padding">
+            <div class="ui raised red padded segment">
+                <div class="project-head">
+                    <div>
+                        <p class="project-title">RhymingWord:
+                            ${globData[i].word}
+                        </p>
+                        <p class="project-title">Score:
+                            ${globData[i].score}
+                        </p>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+`
+                                        }else{
+
+                                            newHTML=
+    `
+    <div class="ui three column grid">
+        <div class="column project-padding">
+            <div class="ui raised red padded segment">
+                <div class="project-head">
+                    <div>
+                        <p class="project-title">RhymingWord:
+                            ${globData[i].word}
+                        </p>
+                        <p class="project-title">Score:
+                            ${globData[i].score}
+                        </p>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+    `
+                                        } // else working
+                                    } // for data <10
+                                } // if data  <10
+                                
+                                document.getElementById("demo").innerHTML = '';
+                                document.getElementById("demo").innerHTML = newHTML;
+                            } // if globData != undefined closing here
+                        })                    
+                    }
+            </script>
+
+</div>
+
+
+<% include ./partials/footer %>
